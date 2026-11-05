@@ -1,0 +1,12 @@
+# Dépendances (recréées par npm install)
+node_modules/
+
+# Variables d'environnement : mots de passe, secrets JWT
+.env
+
+# Images envoyées par les utilisateurs (Multer)
+uploads/*
+!uploads/.gitkeep
+
+# Fichiers de log
+npm-debug.log*
