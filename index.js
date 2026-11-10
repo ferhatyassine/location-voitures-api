@@ -9,6 +9,7 @@ import {
   addAgence,
   AgenceDetail,
   deleteAgence,
+  updateAgence,
 } from "./controllers/agenceController.js";
 
 // creer l'application
@@ -35,6 +36,7 @@ app.get("/api/agences", AgenceList);
 app.post("/api/agences", addAgence);
 app.get("/api/agences/:id", AgenceDetail);
 app.delete("/api/agences/:id", deleteAgence);
+app.put("/api/agences/:id", updateAgence);
 
 // demarrer le serveur
 const PORT = process.env.PORT || 5000;
