@@ -1,5 +1,5 @@
 import { Agence } from "../models/relation.js";
-
+import { validationResult } from "express-validator";
 // liste des agences
 
 export const AgenceList = async (req, res) => {
@@ -14,6 +14,10 @@ export const AgenceList = async (req, res) => {
 // ajout d'une agence
 export const addAgence = async (req, res) => {
   const agence = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   try {
     const result = await Agence.create(agence);
     res.status(201).json({ data: result, message: "Agence creee avec succes" });
@@ -25,6 +29,10 @@ export const addAgence = async (req, res) => {
 // detail d'une agence
 export const AgenceDetail = async (req, res) => {
   const { id } = req.params;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   try {
     const agence = await Agence.findByPk(id);
     if (!agence) {
@@ -40,6 +48,10 @@ export const AgenceDetail = async (req, res) => {
 
 export const deleteAgence = async (req, res) => {
   const { id } = req.params;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   try {
     const agence = await Agence.findByPk(id);
     if (!agence) {
@@ -55,7 +67,12 @@ export const deleteAgence = async (req, res) => {
 // modification d'une agence
 export const updateAgence = async (req, res) => {
   const { id } = req.params;
+
   const nouvellesDonnees = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   try {
     const agence = await Agence.findByPk(id);
     if (!agence) {

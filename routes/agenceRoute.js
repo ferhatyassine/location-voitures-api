@@ -1,4 +1,7 @@
 import { Router } from "express";
+import agenceValidationRules, {
+  idValidationRules,
+} from "../validations/agenceValidate.js";
 import {
   addAgence,
   AgenceDetail,
@@ -11,11 +14,11 @@ const route = Router();
 
 //  /api/agences
 route.get("/", AgenceList);
-route.post("/", addAgence);
+route.post("/", agenceValidationRules, addAgence);
 
 //  /api/agences/:id
-route.get("/:id", AgenceDetail);
-route.put("/:id", updateAgence);
-route.delete("/:id", deleteAgence);
+route.get("/:id", idValidationRules, AgenceDetail);
+route.put("/:id", agenceValidationRules, updateAgence);
+route.delete("/:id", idValidationRules, deleteAgence);
 
 export default route;
