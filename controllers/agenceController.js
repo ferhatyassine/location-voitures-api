@@ -21,3 +21,17 @@ export const addAgence = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// detail d'une agence
+export const AgenceDetail = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const agence = await Agence.findByPk(id);
+    if (!agence) {
+      return res.status(404).json({ message: "Agence introuvable" });
+    }
+    res.status(200).json({ data: agence });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

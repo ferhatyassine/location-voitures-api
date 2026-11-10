@@ -4,7 +4,11 @@ import cors from "cors";
 import compression from "compression";
 import database from "./config/connection.js";
 import { Agence } from "./models/relation.js";
-import { AgenceList, addAgence } from "./controllers/agenceController.js";
+import {
+  AgenceList,
+  addAgence,
+  AgenceDetail,
+} from "./controllers/agenceController.js";
 
 // creer l'application
 
@@ -28,6 +32,7 @@ try {
 // les routes
 app.get("/api/agences", AgenceList);
 app.post("/api/agences", addAgence);
+app.get("/api/agences/:id", AgenceDetail);
 
 // demarrer le serveur
 const PORT = process.env.PORT || 5000;
