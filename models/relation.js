@@ -1,6 +1,9 @@
 // importer les modeles (sans relations)
 import Agence from "./Agence.js";
 import Location from "./Location.js";
+import User from "./user.js";
+import Role from "./role.js";
+import RoleUser from "./roleUser.js";
 
 // ajouter les relations (hasMany/belongsTo)
 // Agence (1,1)--- retrait ---(0,n) Location
@@ -24,5 +27,8 @@ Location.belongsTo(Agence, {
   foreignKey: { name: "agenceRetourId", allowNull: false },
 });
 
+Role.belongsToMany(User, { through: RoleUser});
+User.belongsToMany(Role, { through: RoleUser });
+
 // exporter tous les modeles
-export { Agence, Location };
+export { Agence, Location,User, Role, RoleUser };
