@@ -4,6 +4,7 @@ import cors from "cors";
 import compression from "compression";
 import database from "./config/connection.js";
 import { Agence } from "./models/relation.js";
+import agenceRoute from "./routes/agenceRoute.js";
 
 // creer l'application
 
@@ -13,16 +14,19 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 app.use(compression());
+app.use(express.json());
 
 // tester la connexion a MySQL
 try {
   await database.authenticate();
   console.log("connexion a MySQL reussie");
-  await database.sync({ alter: true });
+  await database.sync();
   console.log("table synchronisees");
 } catch (error) {
   console.log("Erreur de connexion a MySQL", error.message);
 }
+// les routes
+app.use("/api/agences", agenceRoute);
 
 // demarrer le serveur
 const PORT = process.env.PORT || 5000;
