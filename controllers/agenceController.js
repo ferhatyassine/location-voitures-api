@@ -35,3 +35,19 @@ export const AgenceDetail = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+//suppression d'une agence
+
+export const deleteAgence = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const agence = await Agence.findByPk(id);
+    if (!agence) {
+      return res.status(404).json({ message: "Agence introuvable" });
+    }
+    await agence.destroy();
+    res.status(200).json({ message: "Agence supprimee avec succes" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
