@@ -3,6 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
 import database from "./config/connection.js";
+import { Agence } from "./models/relation.js";
 
 // creer l'application
 
@@ -17,6 +18,8 @@ app.use(compression());
 try {
   await database.authenticate();
   console.log("connexion a MySQL reussie");
+  await database.sync({ alter: true });
+  console.log("table synchronisees");
 } catch (error) {
   console.log("Erreur de connexion a MySQL", error.message);
 }
