@@ -8,7 +8,7 @@ const User = database.define("User", {
     email: { type: DataTypes.STRING, allowNull: false, unique:true },
     mdp: { type: DataTypes.STRING, allowNull: false },
     telephone: { type: DataTypes.STRING },
-    naissance: { type: DataTypes.DATEONLY },
+    naissance: { type: DataTypes.DATEONLY,allowNull: false },
     num_permis: { type: DataTypes.STRING },
     expiration_permis: { type: DataTypes.DATEONLY, allowNull: false },
     photo: DataTypes.STRING,
