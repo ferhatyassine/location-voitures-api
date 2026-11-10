@@ -10,7 +10,7 @@ const User = database.define("User", {
     telephone: { type: DataTypes.STRING },
     naissance: { type: DataTypes.DATEONLY,allowNull: false },
     num_permis: { type: DataTypes.STRING },
-    expiration_permis: { type: DataTypes.DATEONLY, allowNull: false },
+    expiration_permis: { type: DataTypes.DATEONLY},
     photo: DataTypes.STRING,
     actif: { type: DataTypes.BOOLEAN, defaultValue:true, allowNull:false },
 },{
