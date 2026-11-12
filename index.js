@@ -1,29 +1,81 @@
-import express from "express";
-import helmet from "helmet";
-import cors from "cors";
-import compression from "compression";
+import { DataTypes } from "sequelize";
+import database from "../config/connection.js";
 
-import database from "./config/connection.js";
-import Categorie from "./models/Categorie.js";
+const Voiture = database.define(
+  "Voiture",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
 
-const app = express();
+    modele: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
 
-app.use(cors());
-app.use(helmet());
-app.use(compression());
+    annee: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
 
-try {
-  await database.authenticate();
-  console.log("Connexion a MySQL reussie");
+    immatriculation: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: true,
+    },
 
-  await database.sync();
-  console.log("Tables synchronisees");
-} catch (error) {
-  console.log("Erreur de connexion a MySQL", error.message);
-}
+    vin: {
+      type: DataTypes.STRING(17),
+      allowNull: false,
+      unique: true,
+    },
 
-const PORT = process.env.PORT || 5000;
+    couleur: {
+      type: DataTypes.STRING(30),
+    },
 
-app.listen(PORT, () => {
-  console.log(`Le serveur tourne sur le port ${PORT}`);
-});
+    carburant: {
+      type: DataTypes.STRING(20),
+    },
+
+    transmission: {
+      type: DataTypes.STRING(20),
+    },
+
+    nb_places: {
+      type: DataTypes.INTEGER,
+    },
+
+    kilometrage: {
+      type: DataTypes.INTEGER,
+    },
+
+    prix_jour: {
+      type: DataTypes.DECIMAL(8, 2),
+    },
+
+    statut: {
+      type: DataTypes.STRING(20),
+    },
+
+    photo: {
+      type: DataTypes.STRING(255),
+    },
+
+    id_marque: {
+      type: DataTypes.INTEGER,
+    },
+
+    id_categorie: {
+      type: DataTypes.INTEGER,
+    },
+  },
+  {
+    tableName: "voitures",
+    timestamps: false,
+  }
+);
+
+export default Voiture;
