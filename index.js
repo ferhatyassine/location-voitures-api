@@ -6,6 +6,8 @@ import compression from "compression";
 import database from "./config/connection.js";
 import { Agence } from "./models/relation.js";
 import agenceRoute from "./routes/agenceRoute.js";
+import categorieRoute from "./routes/categoriesRoute.js";
+import voitureRoute from "./routes/voituresRoute.js";
 
 const app = express();
 
@@ -23,11 +25,14 @@ try {
   await database.sync();
   console.log("Tables synchronisees");
 } catch (error) {
-  console.log("Erreur de connexion à MySQL", error.message);
+  console.log("Erreur de connexion à MySQL");
+console.log(error);
 }
 
 // Routes
 app.use("/api/agences", agenceRoute);
+app.use("/api/categories", categorieRoute);
+app.use("/api/voitures", voitureRoute);
 
 // Route de test
 app.get("/", (req, res) => {

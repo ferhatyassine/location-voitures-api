@@ -5,6 +5,8 @@ import Location from "./Location.js";
 import User from "./user.js";
 import Role from "./role.js";
 import RoleUser from "./roleUser.js";
+import Marque from "./Marque.js";
+
 
 // Une catégorie possède plusieurs voitures
 Categorie.hasMany(Voiture, {
@@ -25,6 +27,16 @@ Agence.hasMany(Location, {
 Location.belongsTo(Agence, {
   as: "agenceRetrait",
   foreignKey: { name: "agenceRetraitId", allowNull: false },
+});
+
+// Une marque possède plusieurs voitures
+Marque.hasMany(Voiture, {
+  foreignKey: "id_marque",
+});
+
+// Une voiture appartient à une marque
+Voiture.belongsTo(Marque, {
+  foreignKey: "id_marque",
 });
 
 // Agence (1,1) --- retour --- (0,n) Location
