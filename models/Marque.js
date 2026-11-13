@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import database from "./config/connection.js";
+import database from "../config/connection.js";
 
 const Marque = database.define(
   "Marque",

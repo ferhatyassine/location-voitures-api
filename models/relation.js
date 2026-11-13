@@ -5,6 +5,8 @@ import Location from "./Location.js";
 import User from "./user.js";
 import Role from "./role.js";
 import RoleUser from "./roleUser.js";
+import Marque from "./Marque.js";
+import Paiement from "./Paiement.js";
 
 // Une catégorie possède plusieurs voitures
 Categorie.hasMany(Voiture, {
@@ -14,6 +16,16 @@ Categorie.hasMany(Voiture, {
 // Une voiture appartient à une catégorie
 Voiture.belongsTo(Categorie, {
   foreignKey: "id_categorie"
+});
+
+// Une marque possède plusieurs voitures
+Marque.hasMany(Voiture, {
+  foreignKey: "id_marque"
+});
+
+// Une voiture appartient à une marque
+Voiture.belongsTo(Marque, {
+  foreignKey: "id_marque"
 });
 
 // Agence (1,1) --- retrait --- (0,n) Location
@@ -38,8 +50,19 @@ Location.belongsTo(Agence, {
   foreignKey: { name: "agenceRetourId", allowNull: false },
 });
 
+// Une location possède plusieurs paiements
+Location.hasMany(Paiement, {
+  foreignKey: { name: "locationId", allowNull: false },
+  onDelete: "RESTRICT",
+});
+
+// Un paiement appartient à une location
+Paiement.belongsTo(Location, {
+  foreignKey: { name: "locationId", allowNull: false },
+});
+
 Role.belongsToMany(User, { through: RoleUser });
 User.belongsToMany(Role, { through: RoleUser });
 
 // exporter tous les modeles
-export { Agence, Location, User, Role, RoleUser, Categorie, Voiture };
+export { Agence, Location, User, Role, RoleUser, Categorie, Voiture, Marque, Paiement };
