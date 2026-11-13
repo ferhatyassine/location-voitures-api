@@ -1,81 +1,32 @@
-import { DataTypes } from "sequelize";
-import database from "../config/connection.js";
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import compression from "compression";
+import "./models/relation.js";
 
-const Voiture = database.define(
-  "Voiture",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
+import database from "./config/connection.js";
+import Categorie from "./models/Categorie.js";
+import Voiture from "./models/Voitures.js";
 
-    modele: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
 
-    annee: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+const app = express();
 
-    immatriculation: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      unique: true,
-    },
+app.use(cors());
+app.use(helmet());
+app.use(compression());
 
-    vin: {
-      type: DataTypes.STRING(17),
-      allowNull: false,
-      unique: true,
-    },
+try {
+  await database.authenticate();
+  console.log("Connexion a MySQL reussie");
 
-    couleur: {
-      type: DataTypes.STRING(30),
-    },
+  await database.sync();
+  console.log("Tables synchronisees");
+} catch (error) {
+  console.log("Erreur de connexion a MySQL", error.message);
+}
 
-    carburant: {
-      type: DataTypes.STRING(20),
-    },
+const PORT = process.env.PORT || 5000;
 
-    transmission: {
-      type: DataTypes.STRING(20),
-    },
-
-    nb_places: {
-      type: DataTypes.INTEGER,
-    },
-
-    kilometrage: {
-      type: DataTypes.INTEGER,
-    },
-
-    prix_jour: {
-      type: DataTypes.DECIMAL(8, 2),
-    },
-
-    statut: {
-      type: DataTypes.STRING(20),
-    },
-
-    photo: {
-      type: DataTypes.STRING(255),
-    },
-
-    id_marque: {
-      type: DataTypes.INTEGER,
-    },
-
-    id_categorie: {
-      type: DataTypes.INTEGER,
-    },
-  },
-  {
-    tableName: "voitures",
-    timestamps: false,
-  }
-);
-
-export default Voiture;
+app.listen(PORT, () => {
+  console.log(`Le serveur tourne sur le port ${PORT}`);
+});

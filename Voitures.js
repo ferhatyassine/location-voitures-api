@@ -4,7 +4,7 @@ import database from "../config/connection.js";
 const Voiture = database.define(
   "Voiture",
   {
-    id: {
+    id_voiture: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,

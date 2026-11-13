@@ -4,12 +4,11 @@ import database from "../config/connection.js";
 const Categorie = database.define(
   "Categorie",
   {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+    id_categorie: {
+  type: DataTypes.INTEGER,
+  primaryKey: true,
+  autoIncrement: true,
     },
-
     nom: {
       type: DataTypes.STRING,
       allowNull: false,
