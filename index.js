@@ -18,7 +18,10 @@ app.use(express.json());
 // Tester la connexion MySQL
 try {
   await database.authenticate();
-  console.log("connexion a MySQL reussie");
+  console.log("Connexion a MySQL reussie");
+
+  await database.sync();
+  console.log("Tables synchronisees");
 } catch (error) {
   console.log("Erreur de connexion à MySQL", error.message);
 }
