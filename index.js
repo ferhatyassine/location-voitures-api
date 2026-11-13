@@ -7,9 +7,6 @@ import database from "./config/connection.js";
 import { Agence } from "./models/relation.js";
 import agenceRoute from "./routes/agenceRoute.js";
 
-// Import des routes
-import paiementRoutes from "./routes/paiements.js";
-
 const app = express();
 
 // Middlewares
@@ -25,11 +22,9 @@ try {
 } catch (error) {
   console.log("Erreur de connexion à MySQL", error.message);
 }
-// les routes
-app.use("/api/agences", agenceRoute);
 
 // Routes
-app.use("/api/paiements", paiementRoutes);
+app.use("/api/agences", agenceRoute);
 
 // Route de test
 app.get("/", (req, res) => {
