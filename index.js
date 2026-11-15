@@ -8,6 +8,7 @@ import { Agence } from "./models/relation.js";
 import agenceRoute from "./routes/agenceRoute.js";
 import categorieRoute from "./routes/categoriesRoute.js";
 import voitureRoute from "./routes/voituresRoute.js";
+import locationRoute from "./routes/locationRoute.js";
 
 const app = express();
 
@@ -26,18 +27,18 @@ try {
   console.log("Tables synchronisees");
 } catch (error) {
   console.log("Erreur de connexion à MySQL");
-console.log(error);
+  console.log(error);
 }
 
 // Routes
 app.use("/api/agences", agenceRoute);
 app.use("/api/categories", categorieRoute);
 app.use("/api/voitures", voitureRoute);
-
+app.use("/api/locations", locationRoute);
 // Route de test
 app.get("/", (req, res) => {
   res.json({
-    message: "API Location Voitures opérationnelle"
+    message: "API Location Voitures opérationnelle",
   });
 });
 
