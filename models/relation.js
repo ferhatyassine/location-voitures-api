@@ -7,15 +7,14 @@ import Role from "./role.js";
 import RoleUser from "./roleUser.js";
 import Marque from "./Marque.js";
 
-
 // Une catégorie possède plusieurs voitures
 Categorie.hasMany(Voiture, {
-  foreignKey: "id_categorie"
+  foreignKey: "id_categorie",
 });
 
 // Une voiture appartient à une catégorie
 Voiture.belongsTo(Categorie, {
-  foreignKey: "id_categorie"
+  foreignKey: "id_categorie",
 });
 
 // Agence (1,1) --- retrait --- (0,n) Location
@@ -48,6 +47,23 @@ Agence.hasMany(Location, {
 Location.belongsTo(Agence, {
   as: "agenceRetour",
   foreignKey: { name: "agenceRetourId", allowNull: false },
+});
+
+// user (1,1) --- loue --- (0,n) Location
+User.hasMany(Location, {
+  foreignKey: { name: "userId", allowNull: false },
+  onDelete: "RESTRICT",
+});
+Location.belongsTo(User, {
+  foreignKey: { name: "userId", allowNull: false },
+});
+// voiture (1,1) --- loue --- (0,n) Location
+Voiture.hasMany(Location, {
+  foreignKey: { name: "voitureId", allowNull: false },
+  onDelete: "RESTRICT",
+});
+Location.belongsTo(Voiture, {
+  foreignKey: { name: "voitureId", allowNull: false },
 });
 
 Role.belongsToMany(User, { through: RoleUser });
