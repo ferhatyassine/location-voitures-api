@@ -9,13 +9,34 @@ const includeLocation = [
   { model: Agence, as: "agenceRetour" },
 ];
 
-// liste des locations, avec le client , la voiture et les agences de retrait et de retour
+// liste des locations (paginee), avec le client, la voiture et les agences
+// exemple : GET /api/locations?page=2&limit=10
 export const LocationList = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // page 1 par defaut
+  const limit = parseInt(req.query.limit) || 10; // 10 locations par page par defaut
+  const offset = (page - 1) * limit; // combien de lignes sauter
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   try {
-    const data = await Location.findAll({
+    const { count, rows } = await Location.findAndCountAll({
       include: includeLocation,
+      limit,
+      offset,
+      distinct: true, // compter les locations, pas les lignes jointes
+      order: [["id", "ASC"]], // toujours le meme ordre d'une page a l'autre
     });
-    res.status(200).json({ data });
+    res.status(200).json({
+      data: rows,
+      pagination: {
+        total: count, // nombre total de locations
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit), // nombre de pages
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -8,11 +8,12 @@ import {
 } from "../controllers/locationController.js";
 import locationValidationRules, {
   idValidationRules,
+  paginationValidationRules,
 } from "../validations/locationValidate.js";
 const route = Router();
 
 //   /api/locations
-route.get("/", LocationList);
+route.get("/", paginationValidationRules, LocationList);
 route.post("/", locationValidationRules, addLocation);
 route.get("/:id", idValidationRules, LocationDetail);
 route.put("/:id", locationValidationRules, updateLocation);
