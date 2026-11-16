@@ -1,6 +1,7 @@
 import { Router } from "express";
 import agenceValidationRules, {
   idValidationRules,
+  paginationValidationRules,
 } from "../validations/agenceValidate.js";
 import {
   addAgence,
@@ -15,7 +16,7 @@ import upload from "../middlewares/upload.js";
 const route = Router();
 
 //  /api/agences
-route.get("/", AgenceList);
+route.get("/", paginationValidationRules, AgenceList);
 route.post("/", agenceValidationRules, addAgence);
 
 //  /api/agences/:id

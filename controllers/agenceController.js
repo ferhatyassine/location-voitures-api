@@ -2,12 +2,31 @@ import { Agence } from "../models/relation.js";
 import { validationResult } from "express-validator";
 import fs from "node:fs/promises";
 
-// liste des agences
-
+// liste des agences (paginee) : GET /api/agences?page=1&limit=10
 export const AgenceList = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // page 1 par defaut
+  const limit = parseInt(req.query.limit) || 10; // 10 agences par page par defaut
+  const offset = (page - 1) * limit; // combien de lignes sauter
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
+
   try {
-    const data = await Agence.findAll();
-    res.status(200).json({ data });
+    const { count, rows } = await Agence.findAndCountAll({
+      limit,
+      offset,
+      order: [["id", "ASC"]], // toujours le meme ordre d'une page a l'autre
+    });
+    res.status(200).json({
+      data: rows,
+      pagination: {
+        total: count, // nombre total d'agences
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit), // nombre de pages
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
