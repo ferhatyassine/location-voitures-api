@@ -1,4 +1,5 @@
 import { Location, User, Voiture, Agence } from "../models/relation.js";
+import { validationResult } from "express-validator";
 
 // les tables liees a afficher avec une location (utilise par la liste et le detail)
 const includeLocation = [
@@ -24,6 +25,9 @@ export const LocationList = async (req, res) => {
 
 export const addLocation = async (req, res) => {
   const location = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
   try {
     const result = await Location.create(location);
     res
@@ -37,6 +41,9 @@ export const addLocation = async (req, res) => {
 // detail d'une location
 export const LocationDetail = async (req, res) => {
   const { id } = req.params;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
   try {
     const location = await Location.findByPk(id, {
       include: includeLocation,
@@ -54,6 +61,9 @@ export const LocationDetail = async (req, res) => {
 export const updateLocation = async (req, res) => {
   const { id } = req.params;
   const nouvelledonnees = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
   try {
     const result = await Location.findByPk(id);
     if (!result) {
@@ -70,6 +80,9 @@ export const updateLocation = async (req, res) => {
 // suppression d'une location
 export const deleteLocation = async (req, res) => {
   const { id } = req.params;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
   try {
     const result = await Location.findByPk(id);
     if (!result) {
