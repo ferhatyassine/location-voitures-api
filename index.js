@@ -5,6 +5,8 @@ import compression from "compression";
 import database from "./config/connection.js";
 import { Agence } from "./models/relation.js";
 import agenceRoute from "./routes/agenceRoute.js";
+import userRoute from "./routes/userRoute.js";
+import roleRoute from "./routes/roleRoute.js";
 
 // creer l'application
 
@@ -27,6 +29,8 @@ try {
 }
 // les routes
 app.use("/api/agences", agenceRoute);
+app.use("/api/users", userRoute);
+app.use("/api/roles", roleRoute);
 
 // demarrer le serveur
 const PORT = process.env.PORT || 5000;

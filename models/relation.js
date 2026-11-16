@@ -27,8 +27,26 @@ Location.belongsTo(Agence, {
   foreignKey: { name: "agenceRetourId", allowNull: false },
 });
 
-Role.belongsToMany(User, { through: RoleUser});
-User.belongsToMany(Role, { through: RoleUser });
+Agence.hasMany(User, {
+  as: "utilisateurs",
+  foreignKey: { name: "AgenceId", allowNull: true },
+  onDelete: "SET NULL",
+});
+User.belongsTo(Agence, {
+  as: "agence",
+  foreignKey: { name: "AgenceId", allowNull: true },
+});
+
+Role.belongsToMany(User, {
+  through: RoleUser,
+  foreignKey: "RoleId",
+  otherKey: "UserId",
+});
+User.belongsToMany(Role, {
+  through: RoleUser,
+  foreignKey: "UserId",
+  otherKey: "RoleId",
+});
 
 // exporter tous les modeles
-export { Agence, Location,User, Role, RoleUser };
+export { Agence, Location, User, Role, RoleUser };

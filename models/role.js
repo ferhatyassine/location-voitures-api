@@ -2,8 +2,11 @@ import { DataTypes } from "sequelize";
 import database from "../config/connection.js";
 
 const Role = database.define("Role", {
-    libelle_role: { type: DataTypes.STRING, allowNull: false, unique:true },
-    description: {type: DataTypes.STRING, allowNull: false}
+    titre: {
+        type: DataTypes.ENUM("client", "employe", "administrateur"),
+        allowNull: false,
+        unique: true,
+    },
 },{
     timestamps:false
 })

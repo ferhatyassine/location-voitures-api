@@ -3,16 +3,16 @@ import Sequelize from "sequelize";
 
 const DataTypes = Sequelize.DataTypes;
 const User = database.define("User", {
-    nom: { type: DataTypes.STRING, allowNull: false },
-    prenom: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique:true },
-    mdp: { type: DataTypes.STRING, allowNull: false },
-    telephone: { type: DataTypes.STRING },
-    naissance: { type: DataTypes.DATEONLY,allowNull: false },
-    num_permis: { type: DataTypes.STRING },
-    expiration_permis: { type: DataTypes.DATEONLY},
-    photo: DataTypes.STRING,
-    actif: { type: DataTypes.BOOLEAN, defaultValue:true, allowNull:false },
+    nom: { type: DataTypes.STRING(50), allowNull: false },
+    prenom: { type: DataTypes.STRING(50), allowNull: false },
+    email: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+    mdp: { type: DataTypes.STRING(255), allowNull: false },
+    telephone: { type: DataTypes.STRING(20) },
+    naissance: { type: DataTypes.DATEONLY, allowNull: false },
+    num_permis: { type: DataTypes.STRING(30) },
+    expiration_permis: { type: DataTypes.DATEONLY },
+    photo: { type: DataTypes.STRING(255) },
+    actif: { type: DataTypes.BOOLEAN, defaultValue: true, allowNull: false },
 },{
     timestamps:false
 })
