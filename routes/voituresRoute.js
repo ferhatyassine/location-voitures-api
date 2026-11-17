@@ -8,6 +8,8 @@ import {
   deleteVoiture,
 } from "../controllers/voituresController.js";
 
+import { voitureValidation } from "../validations/voituresValidate.js";
+
 const router = express.Router();
 
 // Lire toutes les voitures
@@ -17,10 +19,10 @@ router.get("/", getVoitures);
 router.get("/:id", getVoitureById);
 
 // Ajouter une voiture
-router.post("/", createVoiture);
+router.post("/", voitureValidation, createVoiture);
 
 // Modifier une voiture
-router.put("/:id", updateVoiture);
+router.put("/:id", voitureValidation, updateVoiture);
 
 // Supprimer une voiture
 router.delete("/:id", deleteVoiture);

@@ -1,4 +1,5 @@
-import Categorie from "../models/categorie.js";
+import Categorie from "../models/Categorie.js";
+import { validationResult } from "express-validator";
 
 // Afficher toutes les catégories
 export const getCategories = async (req, res) => {
@@ -34,6 +35,14 @@ export const getCategorieById = async (req, res) => {
 
 // Ajouter une catégorie
 export const createCategorie = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+
   try {
     const categorie = await Categorie.create(req.body);
 
@@ -47,6 +56,14 @@ export const createCategorie = async (req, res) => {
 
 // Modifier une catégorie
 export const updateCategorie = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+
   try {
     const categorie = await Categorie.findByPk(req.params.id);
 
