@@ -1,0 +1,30 @@
+import express from "express";
+
+import {
+  getCategories,
+  getCategorieById,
+  createCategorie,
+  updateCategorie,
+  deleteCategorie,
+} from "../controllers/categoriesController.js";
+
+import { categorieValidation } from "../validations/categorieValidate.js";
+
+const router = express.Router();
+
+// Lire toutes les catégories
+router.get("/", getCategories);
+
+// Lire une catégorie par son id
+router.get("/:id", getCategorieById);
+
+// Créer une catégorie
+router.post("/", categorieValidation, createCategorie);
+
+// Modifier une catégorie
+router.put("/:id", categorieValidation, updateCategorie);
+
+// Supprimer une catégorie
+router.delete("/:id", deleteCategorie);
+
+export default router;
