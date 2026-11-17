@@ -3,79 +3,100 @@ const Paiement = require('../models/Paiement');
 // Créer un paiement
 exports.createPaiement = async (req, res) => {
   try {
-    const paiement = new Paiement(req.body);
-    const savedPaiement = await paiement.save();
+    const paiement = await Paiement.create(req.body);
 
-    res.status(201).json(savedPaiement);
+    res.status(201).json(paiement);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
-// Obtenir tous les paiements
+// Obtenir tous les paiements avec pagination
 exports.getAllPaiements = async (req, res) => {
   try {
-    const paiements = await Paiement.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
 
-    res.status(200).json(paiements);
+    const { count, rows } = await Paiement.findAndCountAll({
+      limit,
+      offset,
+    });
+
+    res.status(200).json({
+      total: count,
+      page,
+      totalPages: Math.ceil(count / limit),
+      data: rows,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
 // Obtenir un paiement par ID
 exports.getPaiementById = async (req, res) => {
   try {
-    const paiement = await Paiement.findById(req.params.id);
+    const paiement = await Paiement.findByPk(req.params.id);
 
     if (!paiement) {
       return res.status(404).json({
-        message: 'Paiement introuvable'
+        message: 'Paiement introuvable',
       });
     }
 
     res.status(200).json(paiement);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
 // Modifier un paiement
 exports.updatePaiement = async (req, res) => {
   try {
-    const paiement = await Paiement.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const paiement = await Paiement.findByPk(req.params.id);
 
     if (!paiement) {
       return res.status(404).json({
-        message: 'Paiement introuvable'
+        message: 'Paiement introuvable',
       });
     }
 
+    await paiement.update(req.body);
+
     res.status(200).json(paiement);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
 // Supprimer un paiement
 exports.deletePaiement = async (req, res) => {
   try {
-    const paiement = await Paiement.findByIdAndDelete(req.params.id);
+    const paiement = await Paiement.findByPk(req.params.id);
 
     if (!paiement) {
       return res.status(404).json({
-        message: 'Paiement introuvable'
+        message: 'Paiement introuvable',
       });
     }
 
+    await paiement.destroy();
+
     res.status(200).json({
-      message: 'Paiement supprimé avec succès'
+      message: 'Paiement supprimé avec succès',
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
