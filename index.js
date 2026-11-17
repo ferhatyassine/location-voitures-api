@@ -9,6 +9,7 @@ import { Agence } from "./models/relation.js";
 import agenceRoute from "./routes/agenceRoute.js";
 import categorieRoute from "./routes/categoriesRoute.js";
 import voitureRoute from "./routes/voituresRoute.js";
+import locationRoute from "./routes/locationRoute.js";
 
 const app = express();
 
@@ -36,7 +37,7 @@ try {
 app.use("/api/agences", agenceRoute);
 app.use("/api/categories", categorieRoute);
 app.use("/api/voitures", voitureRoute);
-
+app.use("/api/locations", locationRoute);
 // Route de test
 app.get("/", (req, res) => {
   res.json({
