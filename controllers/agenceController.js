@@ -1,11 +1,23 @@
 import { Agence } from "../models/relation.js";
 import { validationResult } from "express-validator";
+import { getPagination, paginationMetadata } from "../utils/pagination.js";
 // liste des agences
 
 export const AgenceList = async (req, res) => {
+  const pagination = getPagination(req, res);
+  if (!pagination) return;
+
+  const { page, limit, offset } = pagination;
   try {
-    const data = await Agence.findAll();
-    res.status(200).json({ data });
+    const { count, rows } = await Agence.findAndCountAll({
+      limit,
+      offset,
+      order: [["id", "ASC"]],
+    });
+    res.status(200).json({
+      data: rows,
+      pagination: paginationMetadata(page, limit, count),
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

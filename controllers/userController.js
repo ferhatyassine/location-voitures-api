@@ -1,6 +1,21 @@
 import bcrypt from "bcrypt";
+import { randomUUID } from "node:crypto";
+import { mkdir, unlink } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { validationResult } from "express-validator";
 import { Agence, Role, RoleUser, User } from "../models/relation.js";
+import { getPagination, paginationMetadata } from "../utils/pagination.js";
+
+const userPhotoDirectory = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../uploads/users",
+);
+const photoExtensions = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+};
 
 const userFields = [
   "nom",
@@ -38,6 +53,46 @@ const getPositiveId = (value) => {
   return Number.isInteger(id) && id > 0 ? id : null;
 };
 
+const storeUserPhoto = async (req, res) => {
+  if (!req.files) return null;
+
+  const fileFields = Object.keys(req.files);
+  const file = req.files.photo;
+  if (fileFields.length !== 1 || fileFields[0] !== "photo" || Array.isArray(file)) {
+    res.status(400).json({ message: "Un seul fichier photo peut être envoyé" });
+    return false;
+  }
+  if (file.truncated) {
+    res.status(413).json({ message: "La photo ne doit pas dépasser 5 Mo" });
+    return false;
+  }
+
+  const extension = photoExtensions[file.mimetype];
+  if (!extension) {
+    res.status(400).json({ message: "La photo doit être au format JPEG, PNG ou WebP" });
+    return false;
+  }
+
+  const filename = `${randomUUID()}${extension}`;
+  try {
+    await mkdir(userPhotoDirectory, { recursive: true });
+    await file.mv(path.join(userPhotoDirectory, filename));
+    return `/uploads/users/${filename}`;
+  } catch {
+    res.status(500).json({ message: "Erreur lors de l'enregistrement de la photo" });
+    return false;
+  }
+};
+
+const removeStoredUserPhoto = async (photo) => {
+  if (!photo) return;
+  try {
+    await unlink(path.join(userPhotoDirectory, path.basename(photo)));
+  } catch (error) {
+    console.error("Erreur lors du nettoyage de la photo utilisateur", error.message);
+  }
+};
+
 const handleUserError = (res, error) => {
   if (error.name === "SequelizeUniqueConstraintError") {
     return res.status(409).json({ message: "Cette adresse courriel est déjà utilisée" });
@@ -51,13 +106,24 @@ const handleUserError = (res, error) => {
   return res.status(500).json({ message: "Erreur lors de la gestion de l'utilisateur" });
 };
 
-export const UserList = async (_req, res) => {
+export const UserList = async (req, res) => {
+  const pagination = getPagination(req, res);
+  if (!pagination) return;
+
+  const { page, limit, offset } = pagination;
   try {
-    const data = await User.findAll({
+    const { count, rows } = await User.findAndCountAll({
       attributes: { exclude: ["mdp"] },
       include: userIncludes,
+      limit,
+      offset,
+      order: [["id", "ASC"]],
+      distinct: true,
     });
-    res.status(200).json({ data });
+    res.status(200).json({
+      data: rows,
+      pagination: paginationMetadata(page, limit, count),
+    });
   } catch {
     res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs" });
   }
@@ -90,7 +156,14 @@ export const addUser = async (req, res) => {
     Object.entries(body).filter(([field]) => userFields.includes(field)),
   );
 
+  let uploadedPhoto;
   try {
+    const photo = await storeUserPhoto(req, res);
+    if (photo === false) return;
+    if (photo) {
+      uploadedPhoto = photo;
+      data.photo = photo;
+    }
     const user = await User.create({ ...data, mdp: await bcrypt.hash(mdp, 10) });
     const createdUser = await User.findByPk(user.id, {
       attributes: { exclude: ["mdp"] },
@@ -101,6 +174,7 @@ export const addUser = async (req, res) => {
       message: "Utilisateur créé avec succès",
     });
   } catch (error) {
+    await removeStoredUserPhoto(uploadedPhoto);
     handleUserError(res, error);
   }
 };
@@ -119,14 +193,24 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ message: "Le mot de passe ne peut pas être vide" });
     }
   }
-  if (Object.keys(data).length === 0 && mdp === undefined) {
+  if (!req.files && Object.keys(data).length === 0 && mdp === undefined) {
     return res.status(400).json({ message: "Aucune donnée valide à modifier" });
   }
 
+  let uploadedPhoto;
   try {
-    if (mdp !== undefined) data.mdp = await bcrypt.hash(mdp, 10);
     const user = await User.findByPk(id);
     if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+    const photo = await storeUserPhoto(req, res);
+    if (photo === false) return;
+    if (photo) {
+      uploadedPhoto = photo;
+      data.photo = photo;
+    }
+    if (Object.keys(data).length === 0 && mdp === undefined) {
+      return res.status(400).json({ message: "Aucune donnée valide à modifier" });
+    }
+    if (mdp !== undefined) data.mdp = await bcrypt.hash(mdp, 10);
     await user.update(data);
     const updatedUser = await User.findByPk(id, {
       attributes: { exclude: ["mdp"] },
@@ -137,6 +221,7 @@ export const updateUser = async (req, res) => {
       message: "Utilisateur modifié avec succès",
     });
   } catch (error) {
+    await removeStoredUserPhoto(uploadedPhoto);
     handleUserError(res, error);
   }
 };

@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { Role } from "../models/relation.js";
+import { getPagination, paginationMetadata } from "../utils/pagination.js";
 
 const getPositiveId = (value) => {
   const id = Number(value);
@@ -23,10 +24,21 @@ const handleRoleError = (res, error) => {
   return res.status(500).json({ message: "Erreur lors de la gestion du rôle" });
 };
 
-export const RoleList = async (_req, res) => {
+export const RoleList = async (req, res) => {
+  const pagination = getPagination(req, res);
+  if (!pagination) return;
+
+  const { page, limit, offset } = pagination;
   try {
-    const data = await Role.findAll();
-    res.status(200).json({ data });
+    const { count, rows } = await Role.findAndCountAll({
+      limit,
+      offset,
+      order: [["id", "ASC"]],
+    });
+    res.status(200).json({
+      data: rows,
+      pagination: paginationMetadata(page, limit, count),
+    });
   } catch {
     res.status(500).json({ message: "Erreur lors de la récupération des rôles" });
   }

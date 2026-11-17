@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticateToken } from "../middleware/authenticateToken.js";
 import {
   addRole,
   deleteRole,
@@ -13,10 +14,10 @@ import roleValidationRules, {
 const route = Router();
 
 route.get("/", RoleList);
-route.post("/", roleValidationRules, addRole);
+route.post("/", authenticateToken, roleValidationRules, addRole);
 
 route.get("/:id", roleIdValidationRules, RoleDetail);
-route.put("/:id", roleIdValidationRules, roleValidationRules, updateRole);
-route.delete("/:id", roleIdValidationRules, deleteRole);
+route.put("/:id", authenticateToken, roleIdValidationRules, roleValidationRules, updateRole);
+route.delete("/:id", authenticateToken, roleIdValidationRules, deleteRole);
 
 export default route;
