@@ -6,6 +6,7 @@ import User from "./user.js";
 import Role from "./role.js";
 import RoleUser from "./roleUser.js";
 import Marque from "./Marque.js";
+import Paiement from "./Paiement.js";
 
 
 // Une catégorie possède plusieurs voitures
@@ -54,4 +55,4 @@ Role.belongsToMany(User, { through: RoleUser });
 User.belongsToMany(Role, { through: RoleUser });
 
 // exporter tous les modeles
-export { Agence, Location, User, Role, RoleUser, Categorie, Voiture };
+export { Agence, Location, User, Role, RoleUser, Categorie, Voiture, Paiement , Marque };
