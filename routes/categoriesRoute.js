@@ -8,6 +8,8 @@ import {
   deleteCategorie,
 } from "../controllers/categoriesController.js";
 
+import { categorieValidation } from "../validations/categorieValidate.js";
+
 const router = express.Router();
 
 // Lire toutes les catégories
@@ -17,10 +19,10 @@ router.get("/", getCategories);
 router.get("/:id", getCategorieById);
 
 // Créer une catégorie
-router.post("/", createCategorie);
+router.post("/", categorieValidation, createCategorie);
 
 // Modifier une catégorie
-router.put("/:id", updateCategorie);
+router.put("/:id", categorieValidation, updateCategorie);
 
 // Supprimer une catégorie
 router.delete("/:id", deleteCategorie);

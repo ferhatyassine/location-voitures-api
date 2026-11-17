@@ -1,11 +1,24 @@
 import Voiture from "../models/Voitures.js";
+import { validationResult } from "express-validator";
 
 // Afficher toutes les voitures
 export const getVoitures = async (req, res) => {
   try {
-    const voitures = await Voiture.findAll();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const offset = (page - 1) * limit;
 
-    res.status(200).json(voitures);
+    const { count, rows } = await Voiture.findAndCountAll({
+      limit,
+      offset,
+    });
+
+    res.status(200).json({
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      voitures: rows,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -34,6 +47,14 @@ export const getVoitureById = async (req, res) => {
 
 // Ajouter une voiture
 export const createVoiture = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+
   try {
     const voiture = await Voiture.create(req.body);
 
@@ -47,6 +68,14 @@ export const createVoiture = async (req, res) => {
 
 // Modifier une voiture
 export const updateVoiture = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+
   try {
     const voiture = await Voiture.findByPk(req.params.id);
 
