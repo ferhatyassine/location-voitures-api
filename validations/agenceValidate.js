@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 const agenceValidationRules = [
   body("nom")
@@ -45,6 +45,18 @@ const agenceValidationRules = [
 // uniquement pour GET /:id et DELETE /:id
 export const idValidationRules = [
   param("id").isInt({ gt: 0 }).withMessage("L'id doit etre un entier positif"),
+];
+
+// uniquement pour GET / (pagination) : ?page=1&limit=10
+export const paginationValidationRules = [
+  query("page")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("page doit etre un entier superieur ou egal a 1"),
+  query("limit")
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage("limit doit etre un entier entre 1 et 100"),
 ];
 
 export default agenceValidationRules;
