@@ -1,3 +1,4 @@
+import upload from "../middlewares/upload.js";
 import { Router } from "express";
 import { param } from "express-validator";
 import userValidationRules, {
@@ -12,6 +13,7 @@ import {
   deleteUser,
   addRoleUser,
   removeRoleUser,
+  uploadPhotoUser,
 } from "../controllers/userController.js";
 import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
 
@@ -41,5 +43,8 @@ route.delete(
   ],
   removeRoleUser,
 );
+
+//  /api/users/:id/image  (photo : admin ou proprietaire, form-data, champ "image")
+route.put("/:id/image", verifyToken, idValidationRules, upload.single("image"), uploadPhotoUser);
 
 export default route;
