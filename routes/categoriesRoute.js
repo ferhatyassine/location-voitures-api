@@ -10,6 +10,8 @@ import {
 
 import { categorieValidation } from "../validations/categorieValidate.js";
 
+import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
+
 const router = express.Router();
 
 // Lire toutes les catégories
@@ -19,12 +21,12 @@ router.get("/", getCategories);
 router.get("/:id", getCategorieById);
 
 // Créer une catégorie
-router.post("/", categorieValidation, createCategorie);
+router.post("/", verifyToken, authorizeRoles("admin"), categorieValidation, createCategorie);
 
 // Modifier une catégorie
-router.put("/:id", categorieValidation, updateCategorie);
+router.put("/:id", verifyToken, authorizeRoles("admin"), categorieValidation, updateCategorie);
 
 // Supprimer une catégorie
-router.delete("/:id", deleteCategorie);
+router.delete("/:id", verifyToken, authorizeRoles("admin"), deleteCategorie);
 
 export default router;

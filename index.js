@@ -11,6 +11,10 @@ import categorieRoute from "./routes/categoriesRoute.js";
 import voitureRoute from "./routes/voituresRoute.js";
 import locationRoute from "./routes/locationRoute.js";
 import authRoute from "./routes/authRoute.js";
+import marqueRoute from "./routes/marqueRoute.js";
+import paiementRoute from "./routes/paiementRoutes.js";
+import userRoute from "./routes/userRoute.js";
+import roleRoute from "./routes/roleRoute.js";
 
 const app = express();
 
@@ -40,6 +44,10 @@ app.use("/api/categories", categorieRoute);
 app.use("/api/voitures", voitureRoute);
 app.use("/api/locations", locationRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/marques", marqueRoute);
+app.use("/api/paiements", paiementRoute);
+app.use("/api/users", userRoute);
+app.use("/api/roles", roleRoute);
 // Route de test
 app.get("/", (req, res) => {
   res.json({

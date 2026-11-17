@@ -4,9 +4,25 @@ import { validationResult } from "express-validator";
 // Afficher toutes les catégories
 export const getCategories = async (req, res) => {
   try {
-    const categories = await Categorie.findAll();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
 
-    res.status(200).json(categories);
+    const { count, rows } = await Categorie.findAndCountAll({
+      limit,
+      offset,
+      order: [["id", "ASC"]],
+    });
+
+    res.status(200).json({
+      data: rows,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit),
+      },
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,

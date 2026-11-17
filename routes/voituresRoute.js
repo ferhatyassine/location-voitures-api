@@ -10,6 +10,8 @@ import {
 
 import { voitureValidation } from "../validations/voituresValidate.js";
 
+import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
+
 const router = express.Router();
 
 // Lire toutes les voitures
@@ -19,12 +21,12 @@ router.get("/", getVoitures);
 router.get("/:id", getVoitureById);
 
 // Ajouter une voiture
-router.post("/", voitureValidation, createVoiture);
+router.post("/", verifyToken, authorizeRoles("admin"), voitureValidation, createVoiture);
 
 // Modifier une voiture
-router.put("/:id", voitureValidation, updateVoiture);
+router.put("/:id", verifyToken, authorizeRoles("admin"), voitureValidation, updateVoiture);
 
 // Supprimer une voiture
-router.delete("/:id", deleteVoiture);
+router.delete("/:id", verifyToken, authorizeRoles("admin"), deleteVoiture);
 
 export default router;
