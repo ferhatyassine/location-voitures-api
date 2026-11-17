@@ -1,12 +1,26 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from "express";
+import marqueValidationRules, {
+  idValidationRules,
+  paginationValidationRules,
+} from "../validations/marqueValidate.js";
+import {
+  createMarque,
+  getAllMarques,
+  getMarqueById,
+  updateMarque,
+  deleteMarque,
+} from "../controllers/marqueController.js";
+import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
 
-const marqueController = require('../controllers/marqueController');
+const route = Router();
 
-router.post('/', marqueController.createMarque);
-router.get('/', marqueController.getAllMarques);
-router.get('/:id', marqueController.getMarqueById);
-router.put('/:id', marqueController.updateMarque);
-router.delete('/:id', marqueController.deleteMarque);
+//  /api/marques  (consultation : publique)
+route.get("/", paginationValidationRules, getAllMarques);
+route.get("/:id", idValidationRules, getMarqueById);
 
-module.exports = router;
+//  gestion des marques : reservee a l'admin
+route.post("/", verifyToken, authorizeRoles("admin"), marqueValidationRules, createMarque);
+route.put("/:id", verifyToken, authorizeRoles("admin"), marqueValidationRules, updateMarque);
+route.delete("/:id", verifyToken, authorizeRoles("admin"), idValidationRules, deleteMarque);
+
+export default route;
