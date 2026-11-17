@@ -1,0 +1,363 @@
+{
+  "info": {
+    "_postman_id": "bc677b94-2a19-4f54-a77a-231ea8a6ebe0",
+    "name": "Location voitures API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59097206",
+    "_collection_link": "https://go.postman.co/collection/59097206-bc677b94-2a19-4f54-a77a-231ea8a6ebe0?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Agences",
+      "item": [
+        {
+          "name": "ajouter une agence",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"Agence Ottawa west\",\r\n  \"adresse\": \"10 bayshore\",\r\n  \"ville\": \"Ottawa\",\r\n  \"code_postal\": \"a1v k8l\",\r\n  \"telephone\": \"613-666-0550\",\r\n  \"heure_ouverture\": \"08:00\",\r\n  \"heure_fermeture\": \"18:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/agences",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "agences"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Liste des agences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/agences?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "agences"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detail d'une agence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/agences/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "agences",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer agence",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/agences/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "agences",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "modifier agence",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nom\": \"Agence Ottawa Centre\",\r\n    \"adresse\": \"100 rue Rideau\",\r\n    \"ville\": \"Ottawa\",\r\n    \"code_postal\": \"K1N 5X8\",\r\n    \"telephone\": \"613-555-0199\",\r\n    \"heure_ouverture\": \"08:00\",\r\n    \"heure_fermeture\": \"18:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/agences/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "agences",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "image d'une agence",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/agences/4/image",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "agences",
+                "4",
+                "image"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Locations",
+      "item": [
+        {
+          "name": "Liste des locations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/locations?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "locations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ajouter une location",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"numero_contrat\": \"LOC-2026-0004\",\r\n    \"date_retrait\": \"2026-11-25 10:00:00\",\r\n    \"date_retour_prevue\": \"2026-11-28 10:00:00\",\r\n    \"km_depart\": 15450,\r\n    \"montant_total\": 165.00,\r\n    \"userId\": 1,\r\n    \"voitureId\": 1,\r\n    \"agenceRetraitId\": 4,\r\n    \"agenceRetourId\": 4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/locations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "locations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "detail d'une location",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/locations/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "locations",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "modifier une location",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"numero_contrat\": \"LOC-2026-0001\",\r\n    \"date_retrait\": \"2026-11-20 10:00:00\",\r\n    \"date_retour_prevue\": \"2026-11-23 10:00:00\",\r\n    \"date_retour_reelle\": \"2026-11-23 09:30:00\",\r\n    \"km_depart\": 15000,\r\n    \"km_retour\": 15450,\r\n    \"montant_total\": 165.00,\r\n    \"statut\": \"terminee\",\r\n    \"userId\": 1,\r\n    \"voitureId\": 1,\r\n    \"agenceRetraitId\": 4,\r\n    \"agenceRetourId\": 4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/locations/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "locations",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "supprimer une location",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/locations/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "locations",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "secret": true,
+      "source": {
+        "provider": "postman",
+        "postman": {
+          "type": "cloud",
+          "secretId": "0b6dd0fe-f0e6-4f90-ac41-f4cefd1e84d7",
+          "vaultId": "2c928e84-2c13-437b-9f93-8650df52f42e"
+        }
+      }
+    }
+  ]
+}
