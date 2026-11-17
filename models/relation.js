@@ -67,6 +67,15 @@ Location.belongsTo(Voiture, {
   foreignKey: { name: "voitureId", allowNull: false },
 });
 
+// location (1,1) --- regle --- (0,n) Paiement
+Location.hasMany(Paiement, {
+  foreignKey: { name: "locationId", allowNull: false },
+  onDelete: "RESTRICT",
+});
+Paiement.belongsTo(Location, {
+  foreignKey: { name: "locationId", allowNull: false },
+});
+
 Role.belongsToMany(User, { through: RoleUser });
 User.belongsToMany(Role, { through: RoleUser });
 
