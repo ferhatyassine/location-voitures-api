@@ -1,3 +1,4 @@
+import upload from "../middlewares/upload.js";
 import { Router } from "express";
 import marqueValidationRules, {
   idValidationRules,
@@ -9,6 +10,7 @@ import {
   getMarqueById,
   updateMarque,
   deleteMarque,
+  uploadLogoMarque,
 } from "../controllers/marqueController.js";
 import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
 
@@ -22,5 +24,8 @@ route.get("/:id", idValidationRules, getMarqueById);
 route.post("/", verifyToken, authorizeRoles("admin"), marqueValidationRules, createMarque);
 route.put("/:id", verifyToken, authorizeRoles("admin"), marqueValidationRules, updateMarque);
 route.delete("/:id", verifyToken, authorizeRoles("admin"), idValidationRules, deleteMarque);
+
+//  /api/marques/:id/image  (logo, form-data, champ "image")
+route.put("/:id/image", verifyToken, authorizeRoles("admin"), idValidationRules, upload.single("image"), uploadLogoMarque);
 
 export default route;
