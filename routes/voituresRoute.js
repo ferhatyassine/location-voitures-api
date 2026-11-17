@@ -1,3 +1,5 @@
+import { param } from "express-validator";
+import upload from "../middlewares/upload.js";
 import express from "express";
 
 import {
@@ -6,6 +8,7 @@ import {
   createVoiture,
   updateVoiture,
   deleteVoiture,
+  uploadPhotoVoiture,
 } from "../controllers/voituresController.js";
 
 import { voitureValidation } from "../validations/voituresValidate.js";
@@ -28,5 +31,8 @@ router.put("/:id", verifyToken, authorizeRoles("admin"), voitureValidation, upda
 
 // Supprimer une voiture
 router.delete("/:id", verifyToken, authorizeRoles("admin"), deleteVoiture);
+
+// Envoyer la photo d'une voiture (form-data, champ "image")
+router.put("/:id/image", verifyToken, authorizeRoles("admin"), [param("id").isInt({ gt: 0 }).withMessage("L'id doit etre un entier positif")], upload.single("image"), uploadPhotoVoiture);
 
 export default router;

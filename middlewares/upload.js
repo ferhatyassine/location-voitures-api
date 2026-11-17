@@ -7,7 +7,9 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const extension = path.extname(file.originalname).toLowerCase(); // ".jpg"
-    cb(null, `agence-${Date.now()}${extension}`); //
+    // prefixe selon la ressource : /api/agences -> "agences-1700000000.jpg"
+    const prefixe = req.baseUrl.split("/").pop() || "image";
+    cb(null, `${prefixe}-${Date.now()}${extension}`);
   },
 });
 

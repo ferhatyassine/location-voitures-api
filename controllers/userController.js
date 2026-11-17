@@ -1,3 +1,4 @@
+import fs from "node:fs/promises";
 import bcrypt from "bcrypt";
 import { User, Role } from "../models/relation.js";
 import { validationResult } from "express-validator";
@@ -142,6 +143,38 @@ export const removeRoleUser = async (req, res) => {
 
     await user.removeRole(role);
     res.status(200).json({ message: `Role ${role.libelle_role} retire de l'utilisateur ${user.id}` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// envoi de l'image : PUT /:id/image (form-data, champ "image")
+export const uploadPhotoUser = async (req, res) => {
+  const { id } = req.params;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    if (req.file) await fs.unlink(req.file.path); // id invalide : on supprime le fichier
+    return res.status(400).json({ errors: errors.array() });
+  }
+  if (!estAutorise(req, id)) {
+    if (req.file) await fs.unlink(req.file.path);
+    return res.status(403).json({ message: "Acces refuse: vous ne pouvez modifier que votre compte" });
+  }
+
+  if (!req.file) {
+    return res.status(400).json({ message: "Aucune image envoyee (champ 'image')" });
+  }
+
+  try {
+    const element = await User.findByPk(id);
+    if (!element) {
+      await fs.unlink(req.file.path); // on supprime le fichier inutile
+      return res.status(404).json({ message: "Utilisateur introuvable" });
+    }
+    await element.update({ photo: `uploads/${req.file.filename}` });
+    const resultat = element.toJSON();
+    delete resultat.mdp;
+    res.status(200).json({ data: resultat, message: "Image enregistree" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
