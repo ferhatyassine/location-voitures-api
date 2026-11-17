@@ -10,6 +10,7 @@ import agenceRoute from "./routes/agenceRoute.js";
 import categorieRoute from "./routes/categoriesRoute.js";
 import voitureRoute from "./routes/voituresRoute.js";
 import locationRoute from "./routes/locationRoute.js";
+import authRoute from "./routes/authRoute.js";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/agences", agenceRoute);
 app.use("/api/categories", categorieRoute);
 app.use("/api/voitures", voitureRoute);
 app.use("/api/locations", locationRoute);
+app.use("/api/auth", authRoute);
 // Route de test
 app.get("/", (req, res) => {
   res.json({

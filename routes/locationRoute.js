@@ -10,13 +10,36 @@ import locationValidationRules, {
   idValidationRules,
   paginationValidationRules,
 } from "../validations/locationValidate.js";
+import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
+
 const route = Router();
 
-//   /api/locations
-route.get("/", paginationValidationRules, LocationList);
-route.post("/", locationValidationRules, addLocation);
-route.get("/:id", idValidationRules, LocationDetail);
-route.put("/:id", locationValidationRules, updateLocation);
-route.delete("/:id", idValidationRules, deleteLocation);
+//  toutes les routes des locations exigent d'etre connecte
+//  /api/locations
+route.get(
+  "/",
+  verifyToken,
+  authorizeRoles("admin", "employe"),
+  paginationValidationRules,
+  LocationList,
+);
+route.post("/", verifyToken, locationValidationRules, addLocation);
+
+//  /api/locations/:id
+route.get("/:id", verifyToken, idValidationRules, LocationDetail);
+route.put(
+  "/:id",
+  verifyToken,
+  authorizeRoles("admin", "employe"),
+  locationValidationRules,
+  updateLocation,
+);
+route.delete(
+  "/:id",
+  verifyToken,
+  authorizeRoles("admin"),
+  idValidationRules,
+  deleteLocation,
+);
 
 export default route;
