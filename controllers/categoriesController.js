@@ -12,7 +12,7 @@ export const getCategories = async (req, res) => {
     const { count, rows } = await Categorie.findAndCountAll({
       limit,
       offset,
-      order: [["id", "ASC"]],
+      order: [["id_categorie", "ASC"]],
     });
 
     res.status(200).json({
